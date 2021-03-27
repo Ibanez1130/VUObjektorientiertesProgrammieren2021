@@ -9,7 +9,7 @@ public class RoundTripFlight extends Flight {
 	
 	public RoundTripFlight(String id, List<IFlight> flights) {
 		super(id);
-		if ((flights.size() == 2) && (flights.get(0).getDeparture() == flights.get(1).getDestination())) {
+		if ((flights.size() == 2) && (flights.get(0).getDeparture().equals(flights.get(1).getDestination()))) {
 			flights
 				.stream()
 				.forEach(f -> this.flights.add(f.deepCopy()));
@@ -31,7 +31,7 @@ public class RoundTripFlight extends Flight {
 	public boolean equals(Object obj) {
 		if (!(obj instanceof RoundTripFlight)) return false;
 		RoundTripFlight r = (RoundTripFlight) obj;
-		return (this.toString() == r.toString());
+		return (this.toString().equals(r.toString()));
 	}
 	
 	public String toString() {

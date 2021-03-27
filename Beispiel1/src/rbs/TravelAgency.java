@@ -32,7 +32,7 @@ public class TravelAgency {
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TravelAgency)) return false;
 		TravelAgency t = (TravelAgency) obj;
-		return this.getName() == t.getName();
+		return this.getName().equals(t.getName());
 	}
 
 }

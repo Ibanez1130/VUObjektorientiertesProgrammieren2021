@@ -13,7 +13,7 @@ public class OneWayFlight extends Flight {
 	public boolean equals(Object obj) {
 		if (!(obj instanceof OneWayFlight)) return false;
 		OneWayFlight o = (OneWayFlight) obj;
-		return ((this.getFlightId() == o.getFlightId()) && (this.getDeparture() == o.getDeparture()) && (this.getDestination() == o.getDestination()));
+		return ((this.getFlightId().equals(o.getFlightId())) && (this.getDeparture().equals(o.getDeparture())) && (this.getDestination().equals(o.getDestination())));
 	}
 	
 	public OneWayFlight deepCopy() {

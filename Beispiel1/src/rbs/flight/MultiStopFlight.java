@@ -14,15 +14,18 @@ public class MultiStopFlight extends Flight {
 	
 	public MultiStopFlight(String id, List<IFlight> flights) throws FlightsNotConnectedException {
 		super(id);
-		int i = 0;
-		for (; i < flights.size() - 2; i++) {
-			if (flights.get(i).getDestination() != flights.get(i + 1).getDeparture()) {
-				throw new FlightsNotConnectedException(flights);
-			} else {
-				this.flights.add(flights.get(i).deepCopy());
+		if (flights.size() > 0) {
+			IFlight prev = null;
+			for (IFlight f : flights) {
+				if ((prev != null) && (!(prev.getDestination().equals(f.getDeparture())))) {
+					throw new FlightsNotConnectedException(flights);
+				}
+				this.flights.add(f.deepCopy());
+				prev = f;
 			}
+			super.departure = flights.get(0).getDeparture();
+			super.destination = prev.getDestination();
 		}
-		super.destination = flights.get(i + 1).getDestination();
 	}
 	
 	public float getPrice() {
@@ -38,7 +41,7 @@ public class MultiStopFlight extends Flight {
 	}
 
 	public void addFlight(IFlight flight) throws FlightsNotConnectedException {
-		if (super.destination == flight.getDeparture()) {
+		if (super.destination.equals(flight.getDeparture())) {
 			super.destination = flight.getDestination();
 		} else {
 			throw new FlightsNotConnectedException(this.flights);
@@ -48,7 +51,7 @@ public class MultiStopFlight extends Flight {
 	public boolean equals(Object obj) {
 		if (!(obj instanceof MultiStopFlight)) return false;
 		MultiStopFlight r = (MultiStopFlight) obj;
-		return (this.toString() == r.toString());
+		return this.toString().equals(r.toString());
 	}
 	
 	public String toString() {
@@ -58,7 +61,7 @@ public class MultiStopFlight extends Flight {
 					return "Flight [ id = " + f.getFlightId() + ", departure = " + f.getDeparture() + ", destination = " + f.getDestination() + ", price = " + f.getPrice() + " ]";
 				})
 				.collect(Collectors.joining(", "));
-		return "MultiStopFlight  [ id = " + super.getFlightId() + ", flights = [ " + flightsString + " ] ]";
+		return "MultiStopFlight [ id = " + super.getFlightId() + ", flights = [ " + flightsString + " ] ]";
 	}
 	
 	public MultiStopFlight deepCopy() {

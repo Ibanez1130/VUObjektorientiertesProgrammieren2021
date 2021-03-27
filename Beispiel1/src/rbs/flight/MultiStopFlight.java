@@ -1,6 +1,7 @@
 package rbs.flight;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 
 public class MultiStopFlight extends Flight {
@@ -36,8 +37,36 @@ public class MultiStopFlight extends Flight {
 		return this.flights;
 	}
 
-	public void addFlight() throws FlightsNotConnectedException {
-		
+	public void addFlight(IFlight flight) throws FlightsNotConnectedException {
+		if (super.destination == flight.getDeparture()) {
+			super.destination = flight.getDestination();
+		} else {
+			throw new FlightsNotConnectedException(this.flights);
+		}
+	}
+	
+	public boolean equals(Object obj) {
+		if (!(obj instanceof MultiStopFlight)) return false;
+		MultiStopFlight r = (MultiStopFlight) obj;
+		return (this.toString() == r.toString());
+	}
+	
+	public String toString() {
+		String flightsString = this.flights
+				.stream()
+				.map(f -> {
+					return "Flight [ id = " + f.getFlightId() + ", departure = " + f.getDeparture() + ", destination = " + f.getDestination() + ", price = " + f.getPrice() + " ]";
+				})
+				.collect(Collectors.joining(", "));
+		return "MultiStopFlight  [ id = " + super.getFlightId() + ", flights = [ " + flightsString + " ] ]";
+	}
+	
+	public MultiStopFlight deepCopy() {
+		try {
+			return new MultiStopFlight(this.getFlightId(), this.getFlights());
+		} catch (FlightsNotConnectedException e) {
+			return null;
+		}
 	}
 	
 }

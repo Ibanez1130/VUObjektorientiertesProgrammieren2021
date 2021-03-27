@@ -38,7 +38,7 @@ public class RoundTripFlight extends Flight {
 		String flightsString = this.flights
 				.stream()
 				.map(f -> {
-					return "Flight [ id = " + f.getFlightId() + ", departure = " + f.getDeparture() + ", destination = " + f.getDestination() + ", price = " + this.getPrice() + " ]";
+					return "Flight [ id = " + f.getFlightId() + ", departure = " + f.getDeparture() + ", destination = " + f.getDestination() + ", price = " + f.getPrice() + " ]";
 				})
 				.collect(Collectors.joining(", "));
 		return "RoundTripFlight  [ id = " + super.getFlightId() + ", flights = [ " + flightsString + " ] ]";

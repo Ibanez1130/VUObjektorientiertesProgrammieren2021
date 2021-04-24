@@ -21,7 +21,11 @@ public class RoundTripFlight extends Flight {
 	}
 	
 	public float getPrice() {
-		return super.getPrice();
+		float sum = 0.0f;
+		for (IFlight f : this.flights) {
+			sum += f.getPrice();
+		}
+		return sum * 0.9f;
 	}
 	
 	public List<IFlight> getFlights() {

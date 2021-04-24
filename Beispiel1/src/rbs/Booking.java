@@ -15,9 +15,7 @@ public class Booking extends Record {
 		super(id);
 		this.agency = agency;
 		this.state = BookingState.OPEN;
-		flights
-			.stream()
-			.forEach(f -> this.flights.add(f.deepCopy()));
+		this.flights = flights;
 	}
 	
 	public List<IFlight> getFlights() {

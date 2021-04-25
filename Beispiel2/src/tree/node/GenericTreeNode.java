@@ -18,13 +18,17 @@ public class GenericTreeNode<NODETYPE> implements ITreeNode<NODETYPE> {
 	public Collection<ITreeNode<NODETYPE>> getChildren() {
 		// "children that are directly connected to the node" -> only left and right childs
 		Collection<ITreeNode<NODETYPE>> c = new Container<ITreeNode<NODETYPE>>();
-		c.add(this.leftChild);
-		c.add(this.rightChild);
+		if (this.getLeftChild() != null) {
+			c.add(this.leftChild);
+		}
+		if (this.getRightChild() != null) {
+			c.add(this.rightChild);
+		}
 		return c;
 	}
 	
 	public ITreeNode<NODETYPE> getLeftChild() {
-		return this.getLeftChild();
+		return this.leftChild;
 	}
 	
 	public void setLeftChild(ITreeNode<NODETYPE> leftChild) {

@@ -8,7 +8,8 @@ public class CopyableTreeNode<NODETYPE extends IDeepCopy> extends GenericTreeNod
 	}
 	
 	public CopyableTreeNode<NODETYPE> deepCopy() {
-		CopyableTreeNode<NODETYPE> t = new CopyableTreeNode<NODETYPE>(super.getLabel(), super.nodeValue());
+		if (!(super.nodeValue() instanceof IDeepCopy)) throw new ClassCastException();
+		CopyableTreeNode<NODETYPE> t = new CopyableTreeNode<NODETYPE>(new String(super.getLabel()), (NODETYPE) ((IDeepCopy) super.nodeValue()).deepCopy());
 		if (super.getLeftChild() != null) {
 			t.setLeftChild(super.getLeftChild().deepCopy());
 		}

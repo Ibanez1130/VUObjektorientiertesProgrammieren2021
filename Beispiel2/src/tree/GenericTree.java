@@ -52,7 +52,11 @@ public class GenericTree<TREETYPE> implements ITree<TREETYPE> {
 	public Collection<ITreeNode<TREETYPE>> searchByFilter(ISearchFilter filter, Object compareObject) {
 		Collection<ITreeNode<TREETYPE>> c = new Container<ITreeNode<TREETYPE>>();
 		if (this.root == null) return c;
-		c.addAll(this.root.searchByFilter(filter, compareObject));
+		try {
+			c.addAll(this.root.searchByFilter(filter, compareObject));
+		} catch (NullPointerException ex) {
+			System.out.println("A NullPointerException has been thrown while adding an element to the Container.");
+		}
 		return c;
 	}
 	

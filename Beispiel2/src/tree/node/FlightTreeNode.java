@@ -10,11 +10,12 @@ public class FlightTreeNode extends GenericTreeNode<IFlight> {
 	}
 	
 	private FlightTreeNode(DualFlight value) {
-		super((value != null) ? value.getFlightId() : "", value);
+		super(value.getFlightId(), value);
 	}
 	
 	public FlightTreeNode(IFlight value) {
-		this((value != null) ? value.getFlightId() : "", value);
+		super(value.getFlightId(), value);
+		this.initialize(value);
 	}
 	
 	private void initialize(IFlight item) {
@@ -26,8 +27,23 @@ public class FlightTreeNode extends GenericTreeNode<IFlight> {
 	}
 	
 	public ITreeNode<IFlight> insertNode(ITreeNode<IFlight> treeNode) {
-		// since we write the flightId into the label, this doesn't change anything in the implementation
-		return super.insertNode(treeNode);
+		if(this.nodeValue().getFlightId().compareTo(treeNode.nodeValue().getFlightId()) > 1) {
+			if(this.getLeftChild() != null) {
+				return this.getLeftChild().insertNode(treeNode);
+			}
+			else {
+				this.setLeftChild(treeNode);
+			}
+		}
+		else {
+			if(this.getRightChild() != null) {
+				return this.getRightChild().insertNode(treeNode);
+			}
+			else {
+				this.setRightChild(treeNode);
+			}
+		}
+		return treeNode;
 	}
 	
 	public FlightTreeNode deepCopy() {

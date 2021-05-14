@@ -100,6 +100,7 @@ public class GenericTreeNode<NODETYPE> implements ITreeNode<NODETYPE> {
 	}
 	
 	public boolean checkNodeByValue(NODETYPE value) {
+		if (!(this.nodeValue() != null && value != null)) return false;
 		return this.nodeValue().equals(value);
 	}
 	
@@ -146,7 +147,7 @@ public class GenericTreeNode<NODETYPE> implements ITreeNode<NODETYPE> {
 	}
 	
 	public GenericTreeNode<NODETYPE> deepCopy() {
-		GenericTreeNode<NODETYPE> t = new GenericTreeNode<NODETYPE>(this.getLabel(), this.nodeValue());
+		GenericTreeNode<NODETYPE> t = new GenericTreeNode<NODETYPE>(new String(this.getLabel()), this.nodeValue());
 		if (this.getLeftChild() != null) {
 			t.setLeftChild(this.getLeftChild().deepCopy());
 		}
@@ -157,10 +158,13 @@ public class GenericTreeNode<NODETYPE> implements ITreeNode<NODETYPE> {
 	}
 	
 	public Collection<ITreeNode<NODETYPE>> searchByFilter(ISearchFilter filter, Object compareObject) {
-		if (filter == null) return null;
-		if (!(compareObject instanceof ITreeNode<?>)) return null;
 		Collection<ITreeNode<NODETYPE>> c = new Container<ITreeNode<NODETYPE>>();
-		if (filter.searchFilterFunction(this, compareObject)) c.add(this);
+		if (filter == null) return c;
+		if (filter.searchFilterFunction(this, compareObject)) {
+			c.add(this);
+		} else if (this.nodeValue != null && filter.searchFilterFunction(this.nodeValue(), compareObject)) {
+			c.add(this);
+		}
 		if (this.getLeftChild() != null) {
 			c.addAll(this.getLeftChild().searchByFilter(filter, compareObject));
 		}

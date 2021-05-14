@@ -20,7 +20,7 @@ public class Container<E> implements Collection<E>, ISearchableByFilter<E> {
 		IContainerElement<E> a = new ContainerElement<E>(e);
 		if (this.contains(a)) return false;
 		if (i == null) {
-			i = a;
+			this.firstElement = a;
 			return true;
 		}
 		while(i.hasNextElement()) {
@@ -45,12 +45,11 @@ public class Container<E> implements Collection<E>, ISearchableByFilter<E> {
 	
 	public boolean contains(Object o) {
 		if (this.firstElement == null) return false;
-		if (!(o instanceof IContainerElement<?>)) return false;
 		IContainerElement<E> e = this.firstElement;
-		if (e.getData().equals(((IContainerElement<E>) o).getData())) return true;
+		if (e.getData().equals(o)) return true;
 		while(e.hasNextElement()) {
 			e = e.getNextElement();
-			if (e.getData().equals(((IContainerElement<E>) o).getData())) return true;
+			if (e.getData().equals(o)) return true;
 		}
 		return false;
 	}
@@ -85,17 +84,15 @@ public class Container<E> implements Collection<E>, ISearchableByFilter<E> {
 	
 	public boolean remove(Object o) {
 		if (o == null || this.firstElement == null) return false;
-		if (!(o instanceof IContainerElement<?>)) return false;
-		IContainerElement<E> r = (IContainerElement<E>) o;
-		if (!this.contains(r)) return false;
+		if (!this.contains(o)) return false;
 		IContainerElement<E> e = this.firstElement;
-		if (e.getData().equals(r.getData())) {
+		if (e.getData().equals(o)) {
 			this.firstElement = (e.hasNextElement()) ? e.getNextElement() : null;
 			return true;
 		}
 		while(e.hasNextElement()) {
 			IContainerElement<E> t = e.getNextElement();
-			if (t.getData().equals(r.getData())) {
+			if (t.getData().equals(o)) {
 				e.setNextElement(t.getNextElement());
 				return true;
 			}
@@ -106,11 +103,10 @@ public class Container<E> implements Collection<E>, ISearchableByFilter<E> {
 	
 	public boolean removeAll(Collection<?> c) {
 		if (c == null) return false;
-		List<Boolean> s = c
-				.stream()
-				.map(e -> this.remove(e))
-				.collect(Collectors.toList());
-		return !(s.contains(false));
+		for (Object obj : c) {
+			while (this.remove(obj)) {}
+		}
+		return true;
 	}
 	
 	public boolean retainAll(Collection<?> c) {
@@ -163,18 +159,25 @@ public class Container<E> implements Collection<E>, ISearchableByFilter<E> {
 	}
 	
 	public Collection<E> searchByFilter(ISearchFilter filter, Object filterObject) {
-		if (filter == null) return null;
-		if (!(filterObject instanceof IContainerElement<?>)) return null;
 		Collection<E> c = new Container<E>();
+		if (filter == null) return c;
 		if (this.firstElement == null) return c;
 		IContainerElement<E> e = this.firstElement;
-		if (filter.searchFilterFunction(e, filterObject)) {
-			c.add(e.getData());
+		if (filter.searchFilterFunction(e.getData(), filterObject)) {
+			try {
+				c.add(e.getData());
+			} catch (NullPointerException ex) {
+				System.out.println("A NullPointerException has been thrown while adding an element to the Container.");
+			}
 		}
 		while(e.hasNextElement()) {
 			e = e.getNextElement();
-			if (filter.searchFilterFunction(e, filterObject)) {
-				c.add(e.getData());
+			if (filter.searchFilterFunction(e.getData(), filterObject)) {
+				try {
+					c.add(e.getData());
+				} catch (NullPointerException ex) {
+					System.out.println("A NullPointerException has been thrown while adding an element to the Container.");
+				}
 			}
 		}
 		return c;

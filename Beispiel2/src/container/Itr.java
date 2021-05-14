@@ -1,16 +1,22 @@
 package container;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Itr<E> implements Iterator<E> {
 	private IContainerElement<E> next;
 
 	public Itr(IContainerElement<E> firstElement) {
-		this.next = firstElement.getNextElement();
+		this.next = firstElement;
 	}
 	
 	public E next() {
-		return this.next.getData();
+		if (this.hasNext() == false) {
+			throw new NoSuchElementException();
+		}
+		E v = this.next.getData();
+		this.next = this.next.getNextElement();
+		return v;
 	}
 
 	public boolean hasNext() {
